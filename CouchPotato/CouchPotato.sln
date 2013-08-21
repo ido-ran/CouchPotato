@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CouchPotato", "CouchPotato.csproj", "{3D7A4FEF-EA04-4962-B4AA-9D6B25B1B7E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CouchPotato.Test", "..\CouchPotato.Test\CouchPotato.Test.csproj", "{7E843159-7F7E-42B5-B73A-E6396F65DFAD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3D7A4FEF-EA04-4962-B4AA-9D6B25B1B7E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D7A4FEF-EA04-4962-B4AA-9D6B25B1B7E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D7A4FEF-EA04-4962-B4AA-9D6B25B1B7E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D7A4FEF-EA04-4962-B4AA-9D6B25B1B7E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E843159-7F7E-42B5-B73A-E6396F65DFAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E843159-7F7E-42B5-B73A-E6396F65DFAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E843159-7F7E-42B5-B73A-E6396F65DFAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E843159-7F7E-42B5-B73A-E6396F65DFAD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

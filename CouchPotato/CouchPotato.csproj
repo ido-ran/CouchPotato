@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3D7A4FEF-EA04-4962-B4AA-9D6B25B1B7E7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CouchPotato</RootNamespace>
+    <AssemblyName>CouchPotato</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="LoveSeat">
+      <HintPath>Lib\LoveSeat\LoveSeat.dll</HintPath>
+    </Reference>
+    <Reference Include="LoveSeat.Interfaces">
+      <HintPath>Lib\LoveSeat\LoveSeat.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Annotations\AssociationAttribute.cs" />
+    <Compile Include="CouchClientAdapter\BulkResponse.cs" />
+    <Compile Include="CouchClientAdapter\BulkResponseRow.cs" />
+    <Compile Include="CouchClientAdapter\BulkUpdater.cs" />
+    <Compile Include="CouchClientAdapter\ClientAdapterFactory.cs" />
+    <Compile Include="FriendAssemblies.cs" />
+    <Compile Include="LoveSeatAdapter\LoveSeatBulkUpdater.cs" />
+    <Compile Include="LoveSeatAdapter\LoveSeatClientAdapter.cs" />
+    <Compile Include="Odm\AssociationCollection.cs" />
+    <Compile Include="Odm\AssociationCollectionOfT.cs" />
+    <Compile Include="CouchClientAdapter\CouchDBClientAdapter.cs" />
+    <Compile Include="Odm\CouchDBContext.cs" />
+    <Compile Include="Odm\CouchDBViewRowKey.cs" />
+    <Compile Include="Odm\CouchDocInfo.cs" />
+    <Compile Include="Odm\DocumentManager.cs" />
+    <Compile Include="Odm\DocumentState.cs" />
+    <Compile Include="Odm\EntitiesProcessResult.cs" />
+    <Compile Include="Odm\EntitiesProcessResultBuilder.cs" />
+    <Compile Include="Odm\EntityInfo.cs" />
+    <Compile Include="Odm\IdentityMap.cs" />
+    <Compile Include="Odm\IdRev.cs" />
+    <Compile Include="Odm\Internal\AssociationCollectionHelper.cs" />
+    <Compile Include="Odm\CouchDBFieldsConst.cs" />
+    <Compile Include="Odm\Mapping.cs" />
+    <Compile Include="Odm\MappingExtensions.cs" />
+    <Compile Include="Odm\OdmView.cs" />
+    <Compile Include="Odm\PreProcessEntityInfo.cs" />
+    <Compile Include="Odm\PreProcessInfo.cs" />
+    <Compile Include="Odm\Serializer.cs" />
+    <Compile Include="Odm\StringUtil.cs" />
+    <Compile Include="CouchClientAdapter\CouchViewOptions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
