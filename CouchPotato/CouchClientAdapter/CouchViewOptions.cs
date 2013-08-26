@@ -9,13 +9,16 @@ namespace CouchPotato.CouchClientAdapter {
     public Nullable<int> Limit { get; set; }
     public bool IncludeDocs { get; set; }
     public List<object> Key { get; set; }
+    public List<object> Keys { get; set; }
     public List<object> StartKey { get; set; }
     public List<object> EndKey { get; set; }
 
     public CouchViewOptions() {
       Key = new List<object>();
+      Keys = new List<object>();
       StartKey = new List<object>();
       EndKey = new List<object>();
     }
+
   }
 }

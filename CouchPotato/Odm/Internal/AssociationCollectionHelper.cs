@@ -23,7 +23,7 @@ namespace CouchPotato.Odm.Internal {
     }
 
     public bool IsEmpty {
-      get { return 0 == Count; }
+      get { return typelessCollection == null || 0 == Count; }
     }
 
     private int Count {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
 namespace CouchPotato.Odm {
   /// <summary>
@@ -27,14 +28,18 @@ namespace CouchPotato.Odm {
     }
 
     internal void Add(List<EntityInfo> entitiesToAdd) {
-      foreach (EntityInfo entityInfo in entitiesToAdd) {
-        docInfos.Add(entityInfo.IdRev.Id, 
-          new CouchDocInfo(entityInfo.IdRev.Id, entityInfo.IdRev.Rev, DocumentState.Clean));
+      for (int index = 0; index < entitiesToAdd.Count; index++) {
+        EntityInfo entityInfo = entitiesToAdd[index];
+        
+        docInfos.Add(entityInfo.IdRev.Id,
+          new CouchDocInfo(entityInfo.IdRev.Id, entityInfo.IdRev.Rev, 
+            entityInfo.Document, 
+            DocumentState.Clean));
       }
     }
 
     internal void MarkInserted(string id) {
-      docInfos[id] = new CouchDocInfo(id, null, DocumentState.New);
+      docInfos[id] = new CouchDocInfo(id, null, null, DocumentState.New);
     }
 
     internal void MarkUpdated(string id) {

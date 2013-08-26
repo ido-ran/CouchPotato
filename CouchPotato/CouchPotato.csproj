@@ -56,7 +56,10 @@
     <Compile Include="Odm\AssociationCollection.cs" />
     <Compile Include="Odm\AssociationCollectionOfT.cs" />
     <Compile Include="CouchClientAdapter\CouchDBClientAdapter.cs" />
+    <Compile Include="Odm\AssociationListOfT.cs" />
+    <Compile Include="Odm\AssociationSetOfT.cs" />
     <Compile Include="Odm\CouchDBContext.cs" />
+    <Compile Include="Odm\CouchDBContextExtensions.cs" />
     <Compile Include="Odm\CouchDBViewRowKey.cs" />
     <Compile Include="Odm\CouchDocInfo.cs" />
     <Compile Include="Odm\DocumentManager.cs" />
@@ -68,9 +71,15 @@
     <Compile Include="Odm\IdRev.cs" />
     <Compile Include="Odm\Internal\AssociationCollectionHelper.cs" />
     <Compile Include="Odm\CouchDBFieldsConst.cs" />
+    <Compile Include="Odm\LoadRelatedOptions.cs" />
+    <Compile Include="Odm\LoadRelatedOptionsBuilder.cs" />
+    <Compile Include="Odm\LoadRelatedPreProcessInfo.cs" />
+    <Compile Include="Odm\LoadRelatedPreProcessInfoBuilder.cs" />
+    <Compile Include="Odm\LoadRelatedWithViewInfo.cs" />
     <Compile Include="Odm\Mapping.cs" />
     <Compile Include="Odm\MappingExtensions.cs" />
     <Compile Include="Odm\OdmView.cs" />
+    <Compile Include="Odm\OdmViewProcessingOptions.cs" />
     <Compile Include="Odm\PreProcessEntityInfo.cs" />
     <Compile Include="Odm\PreProcessInfo.cs" />
     <Compile Include="Odm\Serializer.cs" />

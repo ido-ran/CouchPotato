@@ -20,5 +20,7 @@ namespace CouchPotato.Test {
 
     [Association("Users")]
     public virtual ICollection<TenantModel> Tenants { get; set; }
+
+    public PlanModel Plan { get; set; }
   }
 }

@@ -16,7 +16,10 @@ namespace CouchPotato.Odm {
       this.key = key;
     }
 
-    public object Key {
+    /// <summary>
+    /// Get the raw key as captured from CouchDB view.
+    /// </summary>
+    public object RawKey {
       get { return key; }
     }
 
@@ -24,13 +27,14 @@ namespace CouchPotato.Odm {
     /// Check if the key match the specified related id.
     /// </summary>
     /// <param name="id"></param>
+    /// <param name="keyPart"></param>
     /// <returns></returns>
     /// <remarks>
     /// This method assume the key is array of structure [{id},0-for main entity, 1-for related entity].
     /// </remarks>
-    internal bool MatchRelatedId(string id) {
+    internal bool MatchRelatedId(string id, object keyPart) {
       object[] joinKey = (object[])key;
-      return id.Equals(joinKey[0]);
+      return id.Equals(joinKey[0]) && keyPart.Equals(joinKey[1]);
     }
   }
 }

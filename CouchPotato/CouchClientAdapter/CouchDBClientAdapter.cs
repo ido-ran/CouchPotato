@@ -14,6 +14,13 @@ namespace CouchPotato.CouchClientAdapter {
     JToken[] GetViewRows(string viewName, CouchViewOptions viewOptions);
 
     /// <summary>
+    /// Select documents by ids.
+    /// </summary>
+    /// <param name="ids"></param>
+    /// <returns></returns>
+    JToken[] GetDocuments(string[] ids);
+
+    /// <summary>
     /// Create bulk updater.
     /// </summary>
     /// <returns></returns>

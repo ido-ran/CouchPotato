@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using CouchPotato.CouchClientAdapter;
 using Newtonsoft.Json.Linq;
 
@@ -8,18 +10,37 @@ namespace CouchPotato.Odm {
     private readonly CouchDBContext couchDBContext;
     private readonly string viewName;
     private CouchViewOptions options;
+    private List<Tuple<string, object>> assoicateCollectionsToLoad;
 
     public OdmView(CouchDBContext couchDBContext, string viewName) {
       this.couchDBContext = couchDBContext;
       this.viewName = viewName;
+
+      assoicateCollectionsToLoad = new List<Tuple<string, object>>();
       options = new CouchViewOptions
       {
         IncludeDocs = true
       };
     }
 
+    public OdmView<T> AssociatedCollection<TProperty>(
+      Expression<Func<T, TProperty>> associatedCollectionExpression,
+      object associatedKeyPart) {
+
+      var me = (MemberExpression)associatedCollectionExpression.Body;
+      string associateCollectionPropName = me.Member.Name;
+      assoicateCollectionsToLoad.Add(Tuple.Create(associateCollectionPropName, associatedKeyPart));
+
+      return this;
+    }
+
     public OdmView<T> Key(object key) {
       options.Key.Add(key);
+      return this;
+    }
+
+    public OdmView<T> Keys(object[] keys) {
+      options.Keys.AddRange(keys);
       return this;
     }
 
@@ -39,7 +60,9 @@ namespace CouchPotato.Odm {
 
     private EntitiesProcessResult ExecuteView(CouchViewOptions viewOptions) {
       JToken[] rows = couchDBContext.ClientAdaper.GetViewRows(viewName, viewOptions);
-      EntitiesProcessResult processResult = couchDBContext.Process(rows);
+      var processingOptions = new OdmViewProcessingOptions(assoicateCollectionsToLoad);
+
+      EntitiesProcessResult processResult = couchDBContext.Process(rows, processingOptions);
       return processResult;
     }
 

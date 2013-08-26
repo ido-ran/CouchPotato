@@ -14,13 +14,11 @@ namespace CouchPotato.Odm {
     private readonly Dictionary<string, object> idToEntity;
     private readonly Dictionary<object, string> entityToId;
     private readonly CouchDBContext context;
-    private readonly Serializer serializer;
-
+    
     public IdentityMap(CouchDBContext context) {
       idToEntity = new Dictionary<string, object>();
       entityToId = new Dictionary<object, string>();
       this.context = context;
-      serializer = new Serializer(context);
     }
 
     /// <summary>
@@ -28,18 +26,23 @@ namespace CouchPotato.Odm {
     /// </summary>
     /// <param name="rows"></param>
     /// <returns></returns>
-    internal EntitiesProcessResult Process(JToken[] rows) {
+    internal EntitiesProcessResult Process(
+      JToken[] rows, OdmViewProcessingOptions processingOptions) {
+
       PreProcessInfo preProcess = PreProcess(rows);
-      return PostProcess(rows, preProcess);
+      return PostProcess(preProcess, processingOptions);
     }
 
-    private EntitiesProcessResult PostProcess(JToken[] rows, PreProcessInfo preProcess) {
+    private EntitiesProcessResult PostProcess(
+      PreProcessInfo preProcess, OdmViewProcessingOptions processingOptions) {
+
       var resultBuilder = new EntitiesProcessResultBuilder();
-      foreach (JToken row in rows) {
+      foreach (PreProcessEntityInfo preProcessRow in preProcess.Rows) {
+        JToken row = preProcessRow.Row;
         JToken doc = row[CouchDBFieldsConst.ResultRowDoc];
         if (doc == null) throw new Exception("doc field was not found");
 
-        string id = doc.Value<string>(CouchDBFieldsConst.DocId);
+        string id = preProcessRow.Id;
         string rev = doc.Value<string>(CouchDBFieldsConst.DocRev);
         var idrev = new IdRev(id, rev);
 
@@ -51,22 +54,33 @@ namespace CouchPotato.Odm {
           // be partially loaded and when updating the association of the related entity
           // only part of the data will be avilable. This patch solve the problem
           // but it will introduce inconsistensis and also cost in performance.
-          serializer.FillProxy(entity, doc, id, preProcess);
+          context.Serializer.FillProxy(entity, doc, id, preProcess, processingOptions, false);
 
           // Reuse exist entity.
-          resultBuilder.AddExist(entity, idrev);
+          resultBuilder.AddExist(entity, idrev, doc, preProcessRow.Key);
         }
         else {
           // Found new entity
-          entity = Deserialize(doc, preProcess);
+          entity = Deserialize(doc, preProcess, processingOptions);
+
           idToEntity.Add(id, entity);
           entityToId.Add(entity, id);
 
-          resultBuilder.AddNew(entity, idrev);
+          resultBuilder.AddNew(entity, idrev, doc, preProcessRow.Key);
         }
       }
 
       return resultBuilder.BuildResult();
+    }
+
+    /// <summary>
+    /// Add new entity to the identity map.
+    /// </summary>
+    /// <param name="entity"></param>
+    public void AddNewEntity(object entity) {
+      string id = context.GetEntityInstanceId(entity);
+      idToEntity.Add(id, entity);
+      entityToId.Add(entityToId, id);
     }
 
     private PreProcessInfo PreProcess(JToken[] rows) {
@@ -80,7 +94,7 @@ namespace CouchPotato.Odm {
         Type entityType = GetDocEntityType(doc);
         CouchDBViewRowKey key = ExtractRowKey(row);
 
-        preProcessRows.Add(new PreProcessEntityInfo(id, entityType, key));
+        preProcessRows.Add(new PreProcessEntityInfo(id, entityType, key, row));
       }
 
       return new PreProcessInfo(preProcessRows.ToArray());
@@ -154,11 +168,13 @@ namespace CouchPotato.Odm {
       return clrValue;
     }
 
-    private object Deserialize(JToken doc, PreProcessInfo preProcess) {
+    private object Deserialize(
+      JToken doc, PreProcessInfo preProcess, OdmViewProcessingOptions processingOptions) {
+
       Type entityType = GetDocEntityType(doc);
       string entityId = GetDocId(doc);
 
-      object entity = serializer.CreateProxy(doc, entityType, entityId, preProcess);
+      object entity = context.Serializer.CreateProxy(doc, entityType, entityId, preProcess, processingOptions, emptyProxy: true);
       return entity;
     }
 
@@ -205,7 +221,7 @@ namespace CouchPotato.Odm {
 
     internal JObject EntityAsDocument(string rev, object entity) {
       string docType = context.Mapping.DocTypeForEntity(entity);
-      return serializer.Serialize(rev, docType, entity);
+      return context.Serializer.Serialize(rev, docType, entity);
     }
   }
 }

@@ -24,9 +24,15 @@ namespace CouchPotato.Odm {
     public List<object> Entities {
       get {
         return
-          newEntities.Concat(existEntities)
+            AllEntities
             .Select(x => x.Entity)
             .ToList();            
+      }
+    }
+
+    private IEnumerable<EntityInfo> AllEntities {
+      get {
+        return newEntities.Concat(existEntities);
       }
     }
 
@@ -35,6 +41,29 @@ namespace CouchPotato.Odm {
     /// </summary>
     public List<EntityInfo> NewEntities {
       get { return newEntities; }
+    }
+
+    internal object GetEntity(string relatedEntityId) {
+      var foundEntity =
+        from e in AllEntities
+        where e.IdRev.Id.Equals(relatedEntityId)
+        select e.Entity;
+
+      return foundEntity.SingleOrDefault();
+    }
+
+    /// <summary>
+    /// Select document ids by view's row key.
+    /// </summary>
+    /// <param name="entityId"></param>
+    /// <returns></returns>
+    internal string[] GetRelatedEntitiesIds(string entityId) {
+      var q =
+        from e in AllEntities
+        where e.Key.RawKey.Equals(entityId)
+        select e.IdRev.Id;
+
+      return q.ToArray();
     }
   }
 }

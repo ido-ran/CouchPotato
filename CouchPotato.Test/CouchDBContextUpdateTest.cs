@@ -55,7 +55,7 @@ rows: [
       CouchDocInfo docInfo = subject.DocumentManager.DocInfo("1");
       return docInfo;
     }
-    
+
     [TestMethod]
     public void UpdateSingleEntity_StateIsModified() {
       CouchDBContext subject;
@@ -101,7 +101,9 @@ rows: [
 
       var couchDBClientMock = new CouchDBClientAdapterMock(RawResponseWithOneTenant, bulkUpdaterMock);
       var subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
-      var userToUpdate = subject.View<UserModel>("fake_not_used").SingleOrDefault();
+      var userToUpdate = subject.View<UserModel>("fake_not_used")
+        .AssociatedCollection(x => x.Tenants, 1)
+        .SingleOrDefault();
 
       TenantModel tenantToRemove = userToUpdate.Tenants.Single();
       userToUpdate.Tenants.Remove(tenantToRemove);
@@ -118,7 +120,9 @@ rows: [
 
       var couchDBClientMock = new CouchDBClientAdapterMock(RawResponseWithOneTenant, bulkUpdaterMock);
       var subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
-      var userToUpdate = subject.View<UserModel>("fake_not_used").SingleOrDefault();
+      var userToUpdate = subject.View<UserModel>("fake_not_used")
+        .AssociatedCollection(x => x.Tenants, 1)
+        .SingleOrDefault();
 
       TenantModel tenantToRemove = userToUpdate.Tenants.Single();
       userToUpdate.Tenants.Remove(tenantToRemove);
@@ -133,7 +137,9 @@ rows: [
 
       var couchDBClientMock = new CouchDBClientAdapterMock(RawResponseWithOneTenant, bulkUpdaterMock);
       var subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
-      var userToUpdate = subject.View<UserModel>("fake_not_used").SingleOrDefault();
+      var userToUpdate = subject.View<UserModel>("fake_not_used")
+        .AssociatedCollection(x => x.Tenants, 1)
+        .SingleOrDefault();
 
       TenantModel tenantToRemove = userToUpdate.Tenants.Single();
       userToUpdate.Tenants.Clear();
@@ -148,13 +154,15 @@ rows: [
 
       var couchDBClientMock = new CouchDBClientAdapterMock(RawResponseWithOneTenant, bulkUpdaterMock);
       var subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
-      var userToUpdate = subject.View<UserModel>("fake_not_used").SingleOrDefault();
+      var userToUpdate = subject.View<UserModel>("fake_not_used")
+        .AssociatedCollection(x => x.Tenants, 1)
+        .SingleOrDefault();
 
       TenantModel newTenant = new TenantModel
       {
         TenantModelID = "2001",
         Name = "Tin-Tenant",
-        Users = new List<UserModel>()
+        Users = new HashSet<UserModel>()
       };
 
       subject.Update(newTenant);
@@ -170,7 +178,9 @@ rows: [
 
       var couchDBClientMock = new CouchDBClientAdapterMock(RawResponseWithTwoTenants, bulkUpdaterMock);
       var subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
-      var userToUpdate = subject.View<UserModel>("fake_not_used").SingleOrDefault();
+      var userToUpdate = subject.View<UserModel>("fake_not_used")
+        .AssociatedCollection(x => x.Tenants, 1)
+        .SingleOrDefault();
 
       var firstTenant = userToUpdate.Tenants.First();
       var secondTenant = userToUpdate.Tenants.Skip(1).First();
@@ -178,7 +188,7 @@ rows: [
       // Clear and readd the first tenant
       userToUpdate.Tenants.Clear();
       userToUpdate.Tenants.Add(firstTenant);
-      
+
       // Update the user even though it should have no effect
       subject.Update(userToUpdate);
 
@@ -192,7 +202,7 @@ rows: [
       PrepareForUpdate(out subject, out userToUpdate);
       userToUpdate.FirstName = "Yotam";
     }
-    
+
     private static void PrepareForUpdate(out CouchDBContext subject, out UserModel userToUpdate) {
       var bulkUpdaterMock = new BulkUpdaterMock();
       bulkUpdaterMock.AddMockResponse(new BulkResponseRow("1", "2-123-Updated", null, null));

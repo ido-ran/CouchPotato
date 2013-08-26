@@ -29,5 +29,9 @@ namespace CouchPotato.Test {
       entitiesToUpdate.Add(entity);
     }
 
+    public List<JObject> EntitiesToUpdate {
+      get { return entitiesToUpdate; }
+    }
+
   }
 }

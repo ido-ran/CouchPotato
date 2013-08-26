@@ -11,7 +11,7 @@ namespace CouchPotato.Odm {
   /// Represent the association collection used to model relations between entities.
   /// </summary>
   /// <typeparam name="T"></typeparam>
-  internal class AssociationCollection<T> : AssociationCollection, ICollection<T> {
+  internal abstract class AssociationCollection<T> : AssociationCollection, ICollection<T> {
 
     /// <summary>
     /// Hold the association collection owner instance.
@@ -21,38 +21,25 @@ namespace CouchPotato.Odm {
     /// <summary>
     /// Reference to the CouchDBContext.
     /// </summary>
-    private readonly CouchDBContext context;
-
-    /// <summary>
-    /// The keys loaded from CouchDB document represent the associated entities.
-    /// </summary>
-    private readonly string[] keys;
+    protected readonly CouchDBContext context;
 
     /// <summary>
     /// Hold Association attribute if one is present on the association property.
     /// </summary>
     private readonly AssociationAttribute associationAttr;
 
-    /// <summary>
-    /// Hold list of keys after the collection has been modified.
-    /// </summary>
-    private List<string> modifiedCollection;
-
     public AssociationCollection(
-      object owner, string[] keys, 
+      object owner,
       CouchDBContext context, AssociationAttribute associationAttr) {
 
       this.owner = owner;
       this.context = context;
-      this.keys = keys;
       this.associationAttr = associationAttr;
     }
 
     public void Add(T item) {
       if (associationAttr == null) {
-        MaterializeModifiedCollection();
-        string id = context.GetEntityInstanceId(item);
-        modifiedCollection.Add(id);
+        AddInternal(item);
       }
       else {
         context.Update(item);
@@ -62,16 +49,7 @@ namespace CouchPotato.Odm {
       }
     }
 
-    private void MaterializeModifiedCollection() {
-      if (modifiedCollection == null) {
-        // First modification
-        ResetModificationCollection();
-      }
-    }
-
-    private void ResetModificationCollection() {
-      modifiedCollection = new List<string>(keys);
-    }
+    protected abstract void AddInternal(T item);
 
     public void Clear() {
       if (associationAttr == null) {
@@ -88,6 +66,8 @@ namespace CouchPotato.Odm {
       }
     }
 
+    protected abstract void ResetModificationCollection();
+
     public bool Contains(T item) {
       throw new NotImplementedException();
     }
@@ -99,8 +79,8 @@ namespace CouchPotato.Odm {
       }
     }
 
-    public int Count {
-      get { return modifiedCollection != null ? modifiedCollection.Count : keys.Length; }
+    public abstract int Count {
+      get;
     }
 
     public bool IsReadOnly {
@@ -110,9 +90,7 @@ namespace CouchPotato.Odm {
     public bool Remove(T item) {
       if (associationAttr == null) {
         // Direct association
-        MaterializeModifiedCollection();
-        string id = context.GetEntityInstanceId(item);
-        return modifiedCollection.Remove(id);
+        return RemoveInternal(item);
       }
       else {
         // Inverse association
@@ -124,6 +102,8 @@ namespace CouchPotato.Odm {
         return RemoveInverseAssociation(item);
       }
     }
+
+    protected abstract bool RemoveInternal(T item);
 
     private bool RemoveInverseAssociation(T item) {
       AssociationCollectionHelper associationCollHelper = GetInverseCollectionHelper(item);
@@ -151,9 +131,7 @@ namespace CouchPotato.Odm {
       }
     }
 
-    public string[] GetEntityIds() {
-      return modifiedCollection != null ? modifiedCollection.ToArray() : keys;
-    }
+    public abstract string[] GetEntityIds();
 
   }
 }

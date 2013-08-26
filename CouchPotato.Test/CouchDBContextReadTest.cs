@@ -202,7 +202,10 @@ doc: {
 
       var couchDBClientMock = new CouchDBClientAdapterMock(rawResponse);
       CouchDBContext subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
-      UserModel user = subject.View<UserModel>("fake_not_used").SingleOrDefault();
+      UserModel user = subject
+        .View<UserModel>("fake_not_used")
+        .AssociatedCollection(x => x.Tenants, 1)
+        .SingleOrDefault();
       TenantModel tenant = user.Tenants.Single();
 
       Assert.IsNotNull(tenant);
@@ -341,6 +344,171 @@ $type: ""tenant""
       TenantModel tenant = subject.View<TenantModel>("fake_not_used").SingleOrDefault();
 
       Assert.AreEqual("he-IL", tenant.DefaultLanguage);
+    }
+
+    [TestMethod]
+    public void ReadToOneRelatedEntitiesOfSingleSourceEntity() {
+      string rawResponse = @"
+{
+total_rows: 123,
+offset: 40,
+rows: [
+{
+  id: ""1"",
+  key: ""ido.ran"",
+  value: null,
+  doc: {
+    _id: ""1"",
+    _rev: ""1-1edc9b67751f21e58895635c4eb47456"",
+    email: ""ido.ran@gmail.com"",
+    password: ""AAABBBCCC"",
+    passwordSalt: ""123123123"",
+    plan: ""Plan20"",
+    roles: [
+      ""Admin""
+    ],
+    tenants: [
+      ""20130722094352-TenantA""
+    ],
+    username: ""ido.ran"",
+    $type: ""user""
+  }
+}
+]
+}";
+      var couchDBClientMock = new CouchDBClientAdapterMock(rawResponse);
+
+      couchDBClientMock.AddGetDocumentResponse(
+@"
+{
+total_rows: 241,
+offset: 0,
+rows: [
+{
+id: ""Plan20"",
+key: ""Plan20"",
+value: {
+rev: ""1-cdbf10a8cfb9c76119bd84706347a5e6""
+},
+doc: {
+_id: ""Plan20"",
+_rev: ""1-cdbf10a8cfb9c76119bd84706347a5e6"",
+currency: ""USD"",
+maxEmployees: 30,
+name: ""Plan20"",
+price: 20,
+$type: ""plan""
+}
+}
+]
+}
+");
+
+      CouchDBContext subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
+      UserModel user = subject.View<UserModel>("fake_not_used").SingleOrDefault();
+      Assert.IsNull(user.Plan);
+      subject.LoadRelated(user, cfg => cfg.One(x => x.Plan));
+      Assert.IsNotNull(user.Plan);
+    }
+
+    [TestMethod]
+    public void ReadToOneRelatedEntitiesOfMultipleSourceEntity() {
+      string rawResponse = @"
+{
+total_rows: 123,
+offset: 40,
+rows: [
+{
+  id: ""1"",
+  key: ""ido.ran"",
+  value: null,
+  doc: {
+    _id: ""1"",
+    _rev: ""1-1edc9b67751f21e58895635c4eb47456"",
+    email: ""ido.ran@gmail.com"",
+    password: ""AAABBBCCC"",
+    passwordSalt: ""123123123"",
+    plan: ""Plan20"",
+    roles: [
+      ""Admin""
+    ],
+    tenants: [
+      ""20130722094352-TenantA""
+    ],
+    username: ""ido.ran"",
+    $type: ""user""
+  },
+  id: ""2"",
+  key: ""doron.shavit"",
+  value: null,
+  doc: {
+    _id: ""2"",
+    _rev: ""2-2eb16b67751f21e58895635c4eb47456"",
+    email: ""doron.shavit@gmail.com"",
+    password: ""AAABBBCCC"",
+    passwordSalt: ""123123123"",
+    plan: ""Free30"",
+    roles: [
+      ""Admin""
+    ],
+    tenants: [
+      ""20130722094352-TenantA""
+    ],
+    username: ""ido.ran"",
+    $type: ""user""
+  }
+}
+]
+}";
+      var couchDBClientMock = new CouchDBClientAdapterMock(rawResponse);
+
+      couchDBClientMock.AddGetDocumentResponse(
+@"
+{
+total_rows: 241,
+offset: 0,
+rows: [
+{
+id: ""Plan20"",
+key: ""Plan20"",
+value: {
+rev: ""1-cdbf10a8cfb9c76119bd84706347a5e6""
+},
+doc: {
+_id: ""Plan20"",
+_rev: ""1-cdbf10a8cfb9c76119bd84706347a5e6"",
+currency: ""USD"",
+maxEmployees: 30,
+name: ""Plan20"",
+price: 20,
+$type: ""plan""
+}
+},
+{
+id: ""Free30"",
+key: ""Free30"",
+value: {
+rev: ""1-86604726db035c16d8bc32ec6762377c""
+},
+doc: {
+_id: ""Free30"",
+_rev: ""1-86604726db035c16d8bc32ec6762377c"",
+currency: ""USD"",
+maxEmployees: 30,
+name: ""Free"",
+price: 0,
+$type: ""plan""
+}
+}
+]
+}
+");
+
+      CouchDBContext subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
+      UserModel[] users = subject.View<UserModel>("fake_not_used").ToArray();
+      
+      subject.LoadRelated(users, cfg => cfg.One(x => x.Plan));
+      Assert.IsTrue(users.All(x => x.Plan != null));
     }
 
   }

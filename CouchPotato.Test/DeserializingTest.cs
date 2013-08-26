@@ -32,7 +32,7 @@ namespace CouchPotato.Test {
     name: ""lulu""
   }";
       JObject json = JObject.Parse(doc);
-      var actualEntity = (SimpleEntity)subject.CreateProxy(json, typeof(SimpleEntity), "1", null);
+      var actualEntity = (SimpleEntity)subject.CreateProxy(json, typeof(SimpleEntity), "1", null, null, true);
 
       Assert.IsNotNull(actualEntity, "Fail to deserialize simple entity");
       Assert.AreEqual(22, actualEntity.Age);
@@ -51,7 +51,7 @@ namespace CouchPotato.Test {
     friends: [""2"", ""3""]
   }";
       JObject json = JObject.Parse(doc);
-      var actualEntity = (PersonWithFriends)subject.CreateProxy(json, typeof(PersonWithFriends), "1", null);
+      var actualEntity = (PersonWithFriends)subject.CreateProxy(json, typeof(PersonWithFriends), "1", null, null, true);
 
       Assert.IsNotNull(actualEntity, "Fail to deserialize simple entity");
       Assert.AreEqual(22, actualEntity.Age);

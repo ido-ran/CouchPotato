@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace CouchPotato.Odm {
   internal class EntitiesProcessResultBuilder {
@@ -15,12 +16,12 @@ namespace CouchPotato.Odm {
       existEntities = new List<EntityInfo>();
     }
 
-    internal void AddNew(object entity, IdRev idrev) {
-      newEntities.Add(new EntityInfo(entity, idrev));
+    internal void AddNew(object entity, IdRev idrev, JToken doc, CouchDBViewRowKey key) {
+      newEntities.Add(new EntityInfo(entity, idrev, doc, key));
     }
 
-    internal void AddExist(object entity, IdRev idrev) {
-      existEntities.Add(new EntityInfo(entity, idrev));
+    internal void AddExist(object entity, IdRev idrev, JToken doc, CouchDBViewRowKey key) {
+      existEntities.Add(new EntityInfo(entity, idrev, doc, key));
     }
 
     internal EntitiesProcessResult BuildResult() {

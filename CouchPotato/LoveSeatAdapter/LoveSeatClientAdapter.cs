@@ -23,7 +23,8 @@ namespace CouchPotato.LoveSeatAdapter {
       var opt = new LoveSeat.ViewOptions
       {
         Limit = odmViewOptions.Limit,
-        IncludeDocs = odmViewOptions.IncludeDocs
+        IncludeDocs = odmViewOptions.IncludeDocs,
+        Keys = odmViewOptions.Keys.Count == 0 ? null : odmViewOptions.Keys.Select(x => new KeyOptions(x)).ToArray()
       };
 
       CopyKeys(odmViewOptions.Key, opt.Key);
@@ -42,6 +43,14 @@ namespace CouchPotato.LoveSeatAdapter {
 
     public BulkUpdater CreateBulkUpdater() {
       return new LoveSeatBulkUpdater(couchDB);
+    }
+
+    public JToken[] GetDocuments(string[] ids) {
+      var keys = new Keys();
+      keys.Values.AddRange(ids);
+
+      ViewResult viewResult = couchDB.GetDocuments(keys);
+      return viewResult.Rows.ToArray();
     }
 
   }

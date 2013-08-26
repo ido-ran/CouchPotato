@@ -18,6 +18,6 @@ namespace CouchPotato.Test {
 
     //public virtual ICollection<Survey> Surveys { get; set; }
 
-    public virtual ICollection<UserModel> Users { get; set; }
+    public virtual ISet<UserModel> Users { get; set; }
   }
 }
