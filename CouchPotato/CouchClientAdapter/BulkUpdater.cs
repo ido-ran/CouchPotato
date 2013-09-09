@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+
 namespace CouchPotato.CouchClientAdapter {
   /// <summary>
   /// Represent implementation for CouchDB builk update API.
@@ -10,6 +11,13 @@ namespace CouchPotato.CouchClientAdapter {
     /// </summary>
     /// <param name="entityAsDoc"></param>
     void Update(JObject entityAsDoc);
+
+    /// <summary>
+    /// Add the document id and rev for deletion.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="rev"></param>
+    void Delete(string id, string rev);
 
     /// <summary>
     /// Execute the bulk operation.

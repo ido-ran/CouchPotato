@@ -34,8 +34,10 @@ namespace CouchPotato.Odm {
       return this;
     }
 
-    public OdmView<T> Key(object key) {
-      options.Key.Add(key);
+    public OdmView<T> Key(params object[] key) {
+      foreach (object keyPart in key) {
+        options.Key.Add(keyPart);
+      }
       return this;
     }
 

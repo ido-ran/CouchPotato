@@ -23,7 +23,7 @@ namespace CouchPotato.Test {
 
     [TestMethod]
     public void Entity_With_Simple_Properties() {
-      Serializer subject = new Serializer(null);
+      Serializer subject = SerializationTestHelper.CreateSerializer(typeof(SimpleEntity));
       string doc =
 @"{
     _id: ""1"",
@@ -41,7 +41,7 @@ namespace CouchPotato.Test {
 
     [TestMethod]
     public void Entity_With_Associated_Collection() {
-      Serializer subject = new Serializer(null);
+      Serializer subject = SerializationTestHelper.CreateSerializer(typeof(PersonWithFriends));
       string doc =
 @"{
     _id: ""1"",

@@ -10,10 +10,12 @@ namespace CouchPotato.Test {
   class BulkUpdaterMock : BulkUpdater {
 
     private List<JObject> entitiesToUpdate;
+    private List<string> entitiesToDelete;
     private List<BulkResponseRow> responseRows;
 
     public BulkUpdaterMock() {
       entitiesToUpdate = new List<JObject>();
+      entitiesToDelete = new List<string>();
       responseRows = new List<BulkResponseRow>();
     }
 
@@ -31,6 +33,14 @@ namespace CouchPotato.Test {
 
     public List<JObject> EntitiesToUpdate {
       get { return entitiesToUpdate; }
+    }
+
+    public List<string> EntitiesToDelete {
+      get { return entitiesToDelete; }
+    }
+
+    public void Delete(string id, string rev) {
+      entitiesToDelete.Add(id);
     }
 
   }

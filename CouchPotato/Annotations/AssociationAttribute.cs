@@ -10,6 +10,18 @@ namespace CouchPotato.Annotations {
 
     private readonly string inversePropertyName;
 
+    /// <summary>
+    /// Initialize new instance of AssociationAttribute which indicate the property
+    /// is an inverse assoication property of OneToMany.
+    /// </summary>
+    public AssociationAttribute() {
+    }
+
+    /// <summary>
+    /// Initialize new instance of AssoicationAttribute which indicate the property
+    /// is an inverse assoication property of ManyToMany
+    /// </summary>
+    /// <param name="inversePropertyName"></param>
     public AssociationAttribute(string inversePropertyName) {
       this.inversePropertyName = inversePropertyName; 
     }

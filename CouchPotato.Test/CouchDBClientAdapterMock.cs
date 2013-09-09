@@ -31,7 +31,7 @@ namespace CouchPotato.Test {
       return rows.ToArray();
     }
 
-    public BulkUpdater CreateBulkUpdater() {
+    public BulkUpdater CreateBulkUpdater(bool allOrNothing) {
       if (bulkUpdater == null) {
         throw new NotSupportedException("There is no bulk updater mock");
       }

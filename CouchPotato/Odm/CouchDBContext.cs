@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using CouchPotato.Annotations;
 using CouchPotato.CouchClientAdapter;
+using CouchPotato.Odm.Internal;
 using Newtonsoft.Json.Linq;
 
 namespace CouchPotato.Odm {
@@ -31,6 +32,25 @@ namespace CouchPotato.Odm {
       return new OdmView<T>(this, viewName);
     }
 
+    public string GetDocIDFromView(string viewName, params object[] key) {
+      var viewOptions = new CouchViewOptions { Key = key.ToList() };
+      JToken[] rows = clientAdapter.GetViewRows(viewName, viewOptions);
+
+      string docid;
+      if (rows.Length > 1) {
+        throw new Exception("More than one row found in view " + viewName);
+      }
+      else if (rows.Length == 0) {
+        // No document found
+        docid = null;
+      }
+      else {
+        docid = rows[0].Value<string>(CouchDBFieldsConst.ResultRowId);
+      }
+
+      return docid;
+    }
+
     public CouchDBClientAdapter ClientAdaper {
       get { return clientAdapter; }
     }
@@ -48,6 +68,9 @@ namespace CouchPotato.Odm {
     /// </summary>
     /// <param name="entity"></param>
     public void Update(object entity) {
+      if (entity == null) throw new ArgumentNullException("entity");
+      EnsureEntityTypeMapped(entity.GetType());
+
       string id = IdentityMap.GetIdByEntity(entity);
       if (null == id) {
         // New entity
@@ -60,7 +83,29 @@ namespace CouchPotato.Odm {
       }
     }
 
-    internal string GetEntityInstanceId(object entity) {
+    /// <summary>
+    /// Ensure that this entity type has mapping in this context.
+    /// </summary>
+    /// <param name="entityType"></param>
+    private void EnsureEntityTypeMapped(Type entityType) {
+      // We search for the document type, if it is not mapped an exception
+      // will be thrown.
+      mapping.DocTypeForEntityType(entityType);
+    }
+
+    public void Delete(object entity) {
+      string id = IdentityMap.GetIdByEntity(entity);
+      if (null == id) {
+        // Entity was not found in the identity map
+        throw new Exception("Entity was not found");
+      }
+      else {
+        // Exist entity, mark as deleted.
+        DocumentManager.MarkDeleted(id);
+      }
+    }
+
+    internal static string GetEntityInstanceId(object entity) {
       PropertyInfo idGetter = Serializer.GetEntityIdGetter(entity.GetType());
       return (string)idGetter.GetValue(entity);
     }
@@ -68,15 +113,21 @@ namespace CouchPotato.Odm {
     /// <summary>
     /// Commit changes made in the context to the database.
     /// </summary>
-    public void SaveChanges() {
+    /// <param name="allOrNothing">Indicate if the bulk API should use all_or_nothing parameter.</param>
+    public void SaveChanges(bool allOrNothing = false) {
 
       Tuple<CouchDocInfo, object>[] modifiedEntities = GetModifiedEntities();
       if (modifiedEntities.Length > 0) {
-        BulkUpdater bulkUpdater = clientAdapter.CreateBulkUpdater();
+        BulkUpdater bulkUpdater = clientAdapter.CreateBulkUpdater(allOrNothing);
 
         foreach (Tuple<CouchDocInfo, object> entityWithInfo in modifiedEntities) {
-          JObject serializedDoc = IdentityMap.EntityAsDocument(entityWithInfo.Item1.Rev, entityWithInfo.Item2);
-          bulkUpdater.Update(serializedDoc);
+          if (entityWithInfo.Item1.State == DocumentState.Delete) {
+            bulkUpdater.Delete(entityWithInfo.Item1.Id, entityWithInfo.Item1.Rev);
+          }
+          else {
+            JObject serializedDoc = IdentityMap.EntityAsDocument(entityWithInfo.Item1.Rev, entityWithInfo.Item2);
+            bulkUpdater.Update(serializedDoc);
+          }
         }
 
         BulkResponse response = bulkUpdater.Execute();
@@ -154,7 +205,7 @@ namespace CouchPotato.Odm {
         foreach (PropertyInfo toOneProp in options.ToOne) {
           string relatedEntityId = GetRelatedToOneEntityId(document, toOneProp);
           object relatedToOneEntity = processResult.GetEntity(relatedEntityId);
-          Debug.Assert(relatedToOneEntity != null, "Fail to find ToOne related entity for property " + toOneProp);
+          if (relatedToOneEntity == null) throw new Exception("Fail to find ToOne related entity for property " + toOneProp);
           toOneProp.SetValue(sourceEntity, relatedToOneEntity);
         }
 
@@ -162,7 +213,7 @@ namespace CouchPotato.Odm {
         foreach (PropertyInfo toOneProp in options.ToOneExist) {
           string relatedEntityId = GetRelatedToOneEntityId(document, toOneProp);
           object relatedToOneEntity = identityMap.GetEntityById(relatedEntityId);
-          Debug.Assert(relatedToOneEntity != null, "Fail to find ToOneExist related entity for property " + toOneProp);
+          if (relatedToOneEntity == null) throw new Exception("Fail to find ToOneExist related entity for property " + toOneProp);
           toOneProp.SetValue(sourceEntity, relatedToOneEntity);
         }
 
@@ -244,9 +295,21 @@ namespace CouchPotato.Odm {
     }
 
     private static string GetRelatedToOneEntityId(JToken document, PropertyInfo toOneProp) {
-      string jsonFieldName = Serializer.GetJsonFieldName(toOneProp);
+      string jsonFieldName = EntityDefinitionBuilder.GetJsonFieldName(toOneProp);
       string relatedEntityId = document.Value<string>(jsonFieldName);
       return relatedEntityId;
+    }
+
+    public DeleteByView DeleteByView(string viewName) {
+      return new DeleteByView(this, viewName);
+    }
+
+    /// <summary>
+    /// Clear the context from any loaded and changed entities.
+    /// </summary>
+    public void Clear() {
+      IdentityMap.Clear();
+      DocumentManager.Clear();
     }
   }
 }

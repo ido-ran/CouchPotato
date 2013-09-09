@@ -17,6 +17,11 @@ namespace CouchPotato.Odm {
     /// <summary>
     /// New entity
     /// </summary>
-    New
+    New,
+
+    /// <summary>
+    /// Document was deleted locally.
+    /// </summary>
+    Delete
   }
 }

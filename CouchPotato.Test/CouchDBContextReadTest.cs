@@ -363,7 +363,7 @@ rows: [
     email: ""ido.ran@gmail.com"",
     password: ""AAABBBCCC"",
     passwordSalt: ""123123123"",
-    plan: ""Plan20"",
+    planID: ""Plan20"",
     roles: [
       ""Admin""
     ],
@@ -428,7 +428,7 @@ rows: [
     email: ""ido.ran@gmail.com"",
     password: ""AAABBBCCC"",
     passwordSalt: ""123123123"",
-    plan: ""Plan20"",
+    planID: ""Plan20"",
     roles: [
       ""Admin""
     ],
@@ -447,7 +447,7 @@ rows: [
     email: ""doron.shavit@gmail.com"",
     password: ""AAABBBCCC"",
     passwordSalt: ""123123123"",
-    plan: ""Free30"",
+    planID: ""Free30"",
     roles: [
       ""Admin""
     ],

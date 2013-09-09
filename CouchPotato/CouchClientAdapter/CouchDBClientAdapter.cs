@@ -23,7 +23,8 @@ namespace CouchPotato.CouchClientAdapter {
     /// <summary>
     /// Create bulk updater.
     /// </summary>
+    /// <param name="allOrNothing"></param>
     /// <returns></returns>
-    BulkUpdater CreateBulkUpdater();
+    BulkUpdater CreateBulkUpdater(bool allOrNothing);
   }
 }

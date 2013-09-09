@@ -56,7 +56,9 @@
     <Compile Include="BulkUpdaterMock.cs" />
     <Compile Include="ContextTestHelper.cs" />
     <Compile Include="CouchPotatoAssert.cs" />
+    <Compile Include="JsonAssert.cs" />
     <Compile Include="PlanModel.cs" />
+    <Compile Include="SerializationTestHelper.cs" />
     <Compile Include="SerializerTest.cs" />
     <Compile Include="CouchDBClientAdapterMock.cs" />
     <Compile Include="CouchDBContextReadTest.cs" />
@@ -65,6 +67,7 @@
     <Compile Include="CouchDBContextUpdateTest.cs" />
     <Compile Include="DeserializingTest.cs" />
     <Compile Include="CouchDBContextInsertTest.cs" />
+    <Compile Include="CouchDBContextDeleteTest.cs" />
     <Compile Include="UserModel.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -54,7 +54,7 @@ namespace CouchPotato.Odm {
           // be partially loaded and when updating the association of the related entity
           // only part of the data will be avilable. This patch solve the problem
           // but it will introduce inconsistensis and also cost in performance.
-          context.Serializer.FillProxy(entity, doc, id, preProcess, processingOptions, false);
+          context.Serializer.ReFillProxy(entity, doc, id, preProcess, processingOptions);
 
           // Reuse exist entity.
           resultBuilder.AddExist(entity, idrev, doc, preProcessRow.Key);
@@ -78,9 +78,9 @@ namespace CouchPotato.Odm {
     /// </summary>
     /// <param name="entity"></param>
     public void AddNewEntity(object entity) {
-      string id = context.GetEntityInstanceId(entity);
+      string id = CouchDBContext.GetEntityInstanceId(entity);
       idToEntity.Add(id, entity);
-      entityToId.Add(entityToId, id);
+      entityToId.Add(entity, id);
     }
 
     private PreProcessInfo PreProcess(JToken[] rows) {
@@ -222,6 +222,11 @@ namespace CouchPotato.Odm {
     internal JObject EntityAsDocument(string rev, object entity) {
       string docType = context.Mapping.DocTypeForEntity(entity);
       return context.Serializer.Serialize(rev, docType, entity);
+    }
+
+    internal void Clear() {
+      entityToId.Clear();
+      idToEntity.Clear();
     }
   }
 }

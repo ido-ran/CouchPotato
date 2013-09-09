@@ -41,8 +41,8 @@ namespace CouchPotato.LoveSeatAdapter {
       }
     }
 
-    public BulkUpdater CreateBulkUpdater() {
-      return new LoveSeatBulkUpdater(couchDB);
+    public BulkUpdater CreateBulkUpdater(bool allOrNothing) {
+      return new LoveSeatBulkUpdater(couchDB, allOrNothing);
     }
 
     public JToken[] GetDocuments(string[] ids) {

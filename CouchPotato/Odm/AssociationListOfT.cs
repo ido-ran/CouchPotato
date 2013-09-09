@@ -33,13 +33,13 @@ namespace CouchPotato.Odm {
 
     protected override void AddInternal(T item) {
       MaterializeModifiedCollection();
-      string id = context.GetEntityInstanceId(item);
+      string id = CouchDBContext.GetEntityInstanceId(item);
       modifiedCollection.Add(id);
     }
 
     protected override bool RemoveInternal(T item) {
       MaterializeModifiedCollection();
-      string id = context.GetEntityInstanceId(item);
+      string id = CouchDBContext.GetEntityInstanceId(item);
       return modifiedCollection.Remove(id);
     }
 
