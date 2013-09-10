@@ -24,6 +24,7 @@ namespace CouchPotato.LoveSeatAdapter {
       {
         Limit = odmViewOptions.Limit,
         IncludeDocs = odmViewOptions.IncludeDocs,
+        Descending = odmViewOptions.Descending,
         Keys = odmViewOptions.Keys.Count == 0 ? null : odmViewOptions.Keys.Select(x => new KeyOptions(x)).ToArray()
       };
 
@@ -37,7 +38,12 @@ namespace CouchPotato.LoveSeatAdapter {
 
     private static void CopyKeys(List<object> odmKeys, LoveSeat.Interfaces.IKeyOptions loveSeatKeys) {
       foreach (object key in odmKeys) {
-        loveSeatKeys.Add(key);
+        if (object.ReferenceEquals(key, CouchViewOptions.MaxValue)) {
+          loveSeatKeys.Add(CouchValue.MaxValue);
+        }
+        else {
+          loveSeatKeys.Add(key);
+        }
       }
     }
 

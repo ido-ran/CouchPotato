@@ -205,7 +205,10 @@ namespace CouchPotato.Odm {
         foreach (PropertyInfo toOneProp in options.ToOne) {
           string relatedEntityId = GetRelatedToOneEntityId(document, toOneProp);
           object relatedToOneEntity = processResult.GetEntity(relatedEntityId);
-          if (relatedToOneEntity == null) throw new Exception("Fail to find ToOne related entity for property " + toOneProp);
+
+          // This line was comment out because it is possible to get null related entity
+          // when the property is optional. This check needs to be done only for required properties.
+          //if (relatedToOneEntity == null) throw new Exception("Fail to find ToOne related entity for property " + toOneProp);
           toOneProp.SetValue(sourceEntity, relatedToOneEntity);
         }
 

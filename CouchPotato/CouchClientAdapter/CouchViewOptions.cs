@@ -12,6 +12,7 @@ namespace CouchPotato.CouchClientAdapter {
     public List<object> Keys { get; set; }
     public List<object> StartKey { get; set; }
     public List<object> EndKey { get; set; }
+    public bool Descending { get; set; }
 
     public CouchViewOptions() {
       Key = new List<object>();
@@ -20,5 +21,9 @@ namespace CouchPotato.CouchClientAdapter {
       EndKey = new List<object>();
     }
 
+    /// <summary>
+    /// Represent maximum value in CouchDB key - {}.
+    /// </summary>
+    public static readonly object MaxValue = new object();
   }
 }

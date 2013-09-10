@@ -71,5 +71,24 @@ namespace CouchPotato.Odm {
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
       return GetEnumerator();
     }
+
+    /// <summary>
+    /// Reverse the order of the results.
+    /// </summary>
+    /// <returns></returns>
+    public OdmView<T> Descending() {
+      options.Descending = true;
+      return this;
+    }
+
+    /// <summary>
+    /// Limit the number of results from the view.
+    /// </summary>
+    /// <param name="limit"></param>
+    /// <returns></returns>
+    public OdmView<T> Limit(int limit) {
+      options.Limit = limit;
+      return this;
+    }
   }
 }

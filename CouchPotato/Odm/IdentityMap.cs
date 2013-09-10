@@ -106,66 +106,16 @@ namespace CouchPotato.Odm {
       JToken token = row[CouchDBFieldsConst.Key];
       if (token.Type == JTokenType.Array) {
         var jArrayKey = (JArray)token;
-        key = jArrayKey.Select(x => ConvertJValueToClrValue(x)).ToArray();
+        key = jArrayKey.Select(x => Serializer.ConvertJValueToClrValue(x)).ToArray();
       }
       else if (token.Type == JTokenType.Null) {
         key = null;
       }
       else {
-        key = ConvertJValueToClrValue(token);
+        key = Serializer.ConvertJValueToClrValue(token);
       }
 
       return new CouchDBViewRowKey(key);
-    }
-
-    private object ConvertJValueToClrValue(JToken jValue) {
-      object clrValue = null;
-
-      switch (jValue.Type) {
-        case JTokenType.Array:
-          break;
-        case JTokenType.Boolean:
-          break;
-        case JTokenType.Bytes:
-          break;
-        case JTokenType.Comment:
-          break;
-        case JTokenType.Constructor:
-          break;
-        case JTokenType.Date:
-          break;
-        case JTokenType.Float:
-          break;
-        case JTokenType.Guid:
-          break;
-        case JTokenType.Integer:
-          clrValue = jValue.Value<int>();
-          break;
-        case JTokenType.None:
-          break;
-        case JTokenType.Null:
-          break;
-        case JTokenType.Object:
-          break;
-        case JTokenType.Property:
-          break;
-        case JTokenType.Raw:
-          break;
-        case JTokenType.String:
-          clrValue = jValue.Value<string>();
-          break;
-        case JTokenType.TimeSpan:
-          break;
-        case JTokenType.Undefined:
-          break;
-        case JTokenType.Uri:
-          break;
-        default:
-          break;
-      }
-
-      if (clrValue == null) throw new Exception("Fail to convert JValue to CLR. Type " + jValue);
-      return clrValue;
     }
 
     private object Deserialize(

@@ -220,19 +220,30 @@ namespace CouchPotato.Odm {
       if (serializedValue == null) return null;
 
       if (typeof(DateTime) == desiredType) {
-        if (serializedValue.GetType() == typeof(string)) {
-          var dateTime = DateTime.ParseExact((string)serializedValue, "O",
-            CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
-          return dateTime;
-        }
-        else {
-          DateTime raw = (DateTime)serializedValue;
-          return new DateTime(raw.Ticks, DateTimeKind.Utc);
-        }
+        return ConvertToDateTime(serializedValue);
       }
       else {
         return Convert.ChangeType(serializedValue, desiredType);
       }
+    }
+
+    private static object ConvertToDateTime(object serializedValue) {
+      if (serializedValue.GetType() == typeof(string)) {
+        return ConvertStringToDateTime((string)serializedValue);
+      }
+      else {
+        return ConvertRawDateTimeToUtcDateTime((DateTime)serializedValue);
+      }
+    }
+
+    internal static object ConvertRawDateTimeToUtcDateTime(DateTime rawDateTime) {
+      return new DateTime(rawDateTime.Ticks, DateTimeKind.Utc);
+    }
+
+    private static object ConvertStringToDateTime(string serializedValue) {
+      var dateTime = DateTime.ParseExact(serializedValue, "O",
+        CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+      return dateTime;
     }
 
     internal static string GetEntityIdPropertyName(Type entityType) {
@@ -259,6 +270,57 @@ namespace CouchPotato.Odm {
 
       EntityDefinition entityDef = context.Mapping.GetEntityDefinition(entity.GetType());
       FillProxy(entityDef, entity, doc, id, preProcess, processingOptions, false);
+    }
+
+    internal static object ConvertJValueToClrValue(JToken jValue) {
+      object clrValue = null;
+
+      switch (jValue.Type) {
+        case JTokenType.Array:
+          break;
+        case JTokenType.Boolean:
+          break;
+        case JTokenType.Bytes:
+          break;
+        case JTokenType.Comment:
+          break;
+        case JTokenType.Constructor:
+          break;
+        case JTokenType.Date:
+          clrValue = ConvertRawDateTimeToUtcDateTime(jValue.Value<DateTime>());
+          break;
+        case JTokenType.Float:
+          break;
+        case JTokenType.Guid:
+          break;
+        case JTokenType.Integer:
+          clrValue = jValue.Value<int>();
+          break;
+        case JTokenType.None:
+          break;
+        case JTokenType.Null:
+          break;
+        case JTokenType.Object:
+          break;
+        case JTokenType.Property:
+          break;
+        case JTokenType.Raw:
+          break;
+        case JTokenType.String:
+          clrValue = jValue.Value<string>();
+          break;
+        case JTokenType.TimeSpan:
+          break;
+        case JTokenType.Undefined:
+          break;
+        case JTokenType.Uri:
+          break;
+        default:
+          break;
+      }
+
+      if (clrValue == null) throw new Exception("Fail to convert JValue to CLR. Type " + jValue);
+      return clrValue;
     }
   }
 }
