@@ -68,9 +68,11 @@
     <Compile Include="DeserializingTest.cs" />
     <Compile Include="CouchDBContextInsertTest.cs" />
     <Compile Include="CouchDBContextDeleteTest.cs" />
+    <Compile Include="ReduceViewTest.cs" />
     <Compile Include="UserModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

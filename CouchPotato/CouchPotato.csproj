@@ -93,6 +93,7 @@
     <Compile Include="Odm\OdmViewProcessingOptions.cs" />
     <Compile Include="Odm\PreProcessEntityInfo.cs" />
     <Compile Include="Odm\PreProcessInfo.cs" />
+    <Compile Include="Odm\ReduceView.cs" />
     <Compile Include="Odm\Serializer.cs" />
     <Compile Include="Odm\StringUtil.cs" />
     <Compile Include="CouchClientAdapter\CouchViewOptions.cs" />

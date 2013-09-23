@@ -18,10 +18,13 @@ namespace CouchPotato.Odm.Internal {
 
     }
 
-    public override void Read(object entity, JToken doc, string id, 
+    public override void Read(object entity, JToken doc, string id,
       PreProcessInfo preProcess, OdmViewProcessingOptions processingOptions, bool emptyProxy, CouchDBContext context) {
 
-      ReadValueType(entity, doc);
+      // Not reloading value if this is not empty proxy.
+      if (emptyProxy) {
+        ReadValueType(entity, doc);
+      }
     }
 
     public override void Write(object entity, JObject doc) {

@@ -25,6 +25,8 @@ namespace CouchPotato.LoveSeatAdapter {
         Limit = odmViewOptions.Limit,
         IncludeDocs = odmViewOptions.IncludeDocs,
         Descending = odmViewOptions.Descending,
+        Reduce = odmViewOptions.Reduce,
+        Group = odmViewOptions.Group,
         Keys = odmViewOptions.Keys.Count == 0 ? null : odmViewOptions.Keys.Select(x => new KeyOptions(x)).ToArray()
       };
 

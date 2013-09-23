@@ -314,5 +314,9 @@ namespace CouchPotato.Odm {
       IdentityMap.Clear();
       DocumentManager.Clear();
     }
+
+    public ReduceView<T> ReduceView<T>(string viewName) {
+      return new ReduceView<T>(this, viewName);
+    }
   }
 }

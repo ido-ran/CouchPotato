@@ -13,6 +13,8 @@ namespace CouchPotato.CouchClientAdapter {
     public List<object> StartKey { get; set; }
     public List<object> EndKey { get; set; }
     public bool Descending { get; set; }
+    public Nullable<bool> Reduce { get; set; }
+    public Nullable<bool> Group { get; set; }
 
     public CouchViewOptions() {
       Key = new List<object>();
