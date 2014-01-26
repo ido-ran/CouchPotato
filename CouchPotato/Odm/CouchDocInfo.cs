@@ -10,12 +10,14 @@ namespace CouchPotato.Odm {
     private readonly string rev;
     private readonly DocumentState state;
     private readonly JToken document;
+    private readonly string error;
 
-    public CouchDocInfo(string id, string rev, JToken document, DocumentState state) {
+    public CouchDocInfo(string id, string rev, JToken document, DocumentState state, string error = null) {
       this.id = id;
       this.rev = rev;
       this.document = document;
       this.state = state;
+      this.error = error;
     }
 
     /// <summary>
@@ -38,6 +40,11 @@ namespace CouchPotato.Odm {
     /// </summary>
     public DocumentState State { get { return state; } }
 
+    /// <summary>
+    /// Get the error returned by CouchDB when try to save the document.
+    /// </summary>
+    public string Error { get { return error; } }
+
     internal CouchDocInfo ChangeState(DocumentState newState) {
       if (state == DocumentState.New) return this;
       else return new CouchDocInfo(id, rev, document, newState);
@@ -45,6 +52,10 @@ namespace CouchPotato.Odm {
 
     internal CouchDocInfo ChangeState(DocumentState newState, string newRev) {
       return new CouchDocInfo(id, newRev, document, newState);
+    }
+
+    internal CouchDocInfo ChangeToError(string error) {
+      return new CouchDocInfo(id, rev, document, DocumentState.Error, error);
     }
 
     public override string ToString() {

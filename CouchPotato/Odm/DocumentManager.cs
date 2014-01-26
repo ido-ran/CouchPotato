@@ -57,6 +57,11 @@ namespace CouchPotato.Odm {
       docInfos[id] = docInfo.ChangeState(DocumentState.Delete);
     }
 
+    public void MarkError(string id, string error) {
+      CouchDocInfo docInfo = GetDocInfo(id);
+      docInfos[id] = docInfo.ChangeToError(error);
+    }
+
     private CouchDocInfo GetDocInfo(string id) {
       CouchDocInfo docInfo;
       if (!docInfos.TryGetValue(id, out docInfo)) {

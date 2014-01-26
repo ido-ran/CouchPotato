@@ -9,7 +9,7 @@ namespace CouchPotato.Test {
   internal static class SerializationTestHelper {
 
     internal static Serializer CreateSerializer(Type entityTypeToSerialize) {
-      CouchDBContext context = new CouchDBContext(null);
+      CouchDBContextImpl context = new CouchDBContextImpl(null);
       context.Mapping.MapDocTypeToEntity("e", entityTypeToSerialize);
       Serializer subject = context.Serializer;
       return subject;

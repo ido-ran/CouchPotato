@@ -13,7 +13,7 @@ namespace CouchPotato.Test {
     /// <param name="context"></param>
     /// <param name="expectedCount"></param>
     /// <param name="message"></param>
-    public static void ModifiedDocumentsCount(CouchDBContext context, int expectedCount, string message = null) {
+    public static void ModifiedDocumentsCount(CouchDBContextImpl context, int expectedCount, string message = null) {
       int modifiedDocCount = context.DocumentManager.GetModifiedDocuments().Length;
       Assert.AreEqual(expectedCount, modifiedDocCount, message);
     }

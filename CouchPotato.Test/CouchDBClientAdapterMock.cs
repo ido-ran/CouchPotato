@@ -46,5 +46,9 @@ namespace CouchPotato.Test {
       return ParseViewResponse(response);
     }
 
+    public JObject GetDocument(string id) {
+      throw new NotImplementedException();
+    }
+
   }
 }

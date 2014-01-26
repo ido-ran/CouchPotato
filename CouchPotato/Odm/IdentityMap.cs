@@ -13,11 +13,16 @@ namespace CouchPotato.Odm {
     /// </summary>
     private readonly Dictionary<string, object> idToEntity;
     private readonly Dictionary<object, string> entityToId;
-    private readonly CouchDBContext context;
+    private readonly CouchDBContextImpl context;
+
+    private static EntityIDEqualityComparer entityIdComparer = new EntityIDEqualityComparer();
     
-    public IdentityMap(CouchDBContext context) {
+    public IdentityMap(CouchDBContextImpl context) {
       idToEntity = new Dictionary<string, object>();
-      entityToId = new Dictionary<object, string>();
+
+      // Initialize entity to ID map. We use EntityID to match
+      // given entity to this map, not object identity (reference equals).
+      entityToId = new Dictionary<object, string>(entityIdComparer);
       this.context = context;
     }
 
@@ -78,9 +83,17 @@ namespace CouchPotato.Odm {
     /// </summary>
     /// <param name="entity"></param>
     public void AddNewEntity(object entity) {
-      string id = CouchDBContext.GetEntityInstanceId(entity);
+      string id = CouchDBContextImpl.GetEntityInstanceId(entity);
       idToEntity.Add(id, entity);
       entityToId.Add(entity, id);
+    }
+
+    internal void UpdateEntity(string id, object entity) {
+      if (!object.ReferenceEquals(idToEntity[id], entity)) {
+        idToEntity[id] = entity;
+        entityToId.Remove(entity);
+        entityToId[entity] = id;
+      }
     }
 
     private PreProcessInfo PreProcess(JToken[] rows) {
@@ -177,6 +190,29 @@ namespace CouchPotato.Odm {
     internal void Clear() {
       entityToId.Clear();
       idToEntity.Clear();
+    }
+
+    /// <summary>
+    /// Equality comparer of entities by their ID field.
+    /// </summary>
+    private class EntityIDEqualityComparer : IEqualityComparer<object> {
+
+      // Note: We use explicit implementation because object itself has
+      // Equals(object x, object y) method.
+
+      bool IEqualityComparer<object>.Equals(object x, object y) {
+        string xid = CouchDBContextImpl.GetEntityInstanceId(x);
+        string yid = CouchDBContextImpl.GetEntityInstanceId(y);
+
+        bool equals = object.Equals(xid, yid);
+        return equals;
+      }
+
+      int IEqualityComparer<object>.GetHashCode(object obj) {
+        string entityId = CouchDBContextImpl.GetEntityInstanceId(obj);
+        return entityId.GetHashCode();
+      }
+
     }
   }
 }

@@ -21,7 +21,7 @@ namespace CouchPotato.Odm {
     /// <summary>
     /// Reference to the CouchDBContext.
     /// </summary>
-    protected readonly CouchDBContext context;
+    protected readonly CouchDBContextImpl context;
 
     /// <summary>
     /// Hold Association attribute if one is present on the association property.
@@ -30,7 +30,7 @@ namespace CouchPotato.Odm {
 
     public AssociationCollection(
       object owner,
-      CouchDBContext context, AssociationAttribute associationAttr) {
+      CouchDBContextImpl context, AssociationAttribute associationAttr) {
 
       this.owner = owner;
       this.context = context;

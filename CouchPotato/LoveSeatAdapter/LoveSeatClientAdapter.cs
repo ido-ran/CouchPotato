@@ -54,11 +54,21 @@ namespace CouchPotato.LoveSeatAdapter {
     }
 
     public JToken[] GetDocuments(string[] ids) {
+      if (ids == null) throw new System.ArgumentNullException("ids");
+      if (ids.Length == 0) return new JToken[0];
+
       var keys = new Keys();
       keys.Values.AddRange(ids);
 
       ViewResult viewResult = couchDB.GetDocuments(keys);
       return viewResult.Rows.ToArray();
+    }
+
+    public JObject GetDocument(string id) {
+      if (string.IsNullOrEmpty(id)) throw new System.ArgumentNullException("id");
+
+      Document doc = couchDB.GetDocument(id);
+      return doc;
     }
 
   }

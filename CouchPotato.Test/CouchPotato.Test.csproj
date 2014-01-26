@@ -69,6 +69,8 @@
     <Compile Include="CouchDBContextInsertTest.cs" />
     <Compile Include="CouchDBContextDeleteTest.cs" />
     <Compile Include="ReduceViewTest.cs" />
+    <Compile Include="MigratorTest.cs" />
+    <Compile Include="EnumerableChunkExtensionsTest.cs" />
     <Compile Include="UserModel.cs" />
   </ItemGroup>
   <ItemGroup>

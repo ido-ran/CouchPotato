@@ -49,7 +49,7 @@ rows: [
 ]
 }";
       var couchDBClientMock = new CouchDBClientAdapterMock(rawResponse);
-      CouchDBContext subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
+      CouchDBContextImpl subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
       UserModel userToUpdate = subject.View<UserModel>("fake_not_used").SingleOrDefault();
 
       CouchDocInfo docInfo = subject.DocumentManager.DocInfo("1");
@@ -58,7 +58,7 @@ rows: [
 
     [TestMethod]
     public void UpdateSingleEntity_StateIsModified() {
-      CouchDBContext subject;
+      CouchDBContextImpl subject;
       UserModel userToUpdate;
       UpdateSingleDocument(out subject, out userToUpdate);
 
@@ -70,7 +70,7 @@ rows: [
 
     [TestMethod]
     public void UpdateSingleEntityAndSaveChanges_StateIsClear() {
-      CouchDBContext subject;
+      CouchDBContextImpl subject;
       UserModel userToUpdate;
       UpdateSingleDocument(out subject, out userToUpdate);
 
@@ -83,7 +83,7 @@ rows: [
 
     [TestMethod]
     public void UpdateSingleEntityAndSaveChanges_RevisionUpdates() {
-      CouchDBContext subject;
+      CouchDBContextImpl subject;
       UserModel userToUpdate;
       UpdateSingleDocument(out subject, out userToUpdate);
 
@@ -198,12 +198,12 @@ rows: [
       CouchPotatoAssert.ModifiedDocumentsCount(subject, expectedModifiedDocuments, "Only the second tenant should be updated");
     }
 
-    private static void UpdateSingleDocument(out CouchDBContext subject, out UserModel userToUpdate) {
+    private static void UpdateSingleDocument(out CouchDBContextImpl subject, out UserModel userToUpdate) {
       PrepareForUpdate(out subject, out userToUpdate);
       userToUpdate.FirstName = "Yotam";
     }
 
-    private static void PrepareForUpdate(out CouchDBContext subject, out UserModel userToUpdate) {
+    private static void PrepareForUpdate(out CouchDBContextImpl subject, out UserModel userToUpdate) {
       var bulkUpdaterMock = new BulkUpdaterMock();
       bulkUpdaterMock.AddMockResponse(new BulkResponseRow("1", "2-123-Updated", null, null));
 

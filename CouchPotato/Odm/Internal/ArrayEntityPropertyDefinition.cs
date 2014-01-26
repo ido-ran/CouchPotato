@@ -14,7 +14,7 @@ namespace CouchPotato.Odm.Internal {
     }
 
     public override void Read(object entity, JToken doc, string id, PreProcessInfo preProcess,
-      OdmViewProcessingOptions processingOptions, bool emptyProxy, CouchDBContext context) {
+      OdmViewProcessingOptions processingOptions, bool emptyProxy, CouchDBContextImpl context) {
 
       ReadArray(entity, doc);
     }

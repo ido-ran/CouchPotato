@@ -15,7 +15,7 @@ namespace CouchPotato.Odm.Internal {
     }
 
     public override void Read(object entity, JToken doc, string id, PreProcessInfo preProcess,
-      OdmViewProcessingOptions processingOptions, bool emptyProxy, CouchDBContext context) {
+      OdmViewProcessingOptions processingOptions, bool emptyProxy, CouchDBContextImpl context) {
       CreateReferenceProxies(entity, doc, id, preProcess, processingOptions, emptyProxy, context);
     }
 
@@ -39,7 +39,7 @@ namespace CouchPotato.Odm.Internal {
     private void CreateReferenceProxies(
   object proxy, JToken doc, string id,
   PreProcessInfo preProcess, OdmViewProcessingOptions processingOptions, bool emptyProxy,
-      CouchDBContext context) {
+      CouchDBContextImpl context) {
 
       AssociationAttribute associationAttr = AssociationAttribute.GetSingle(PropertyInfo);
       if (associationAttr == null) {
@@ -55,7 +55,7 @@ namespace CouchPotato.Odm.Internal {
     private void CreateInverseAssociationCollection(
       object proxy, JToken doc, string id,
       PreProcessInfo preProcess, AssociationAttribute associationAttr,
-      OdmViewProcessingOptions processingOptions, CouchDBContext context) {
+      OdmViewProcessingOptions processingOptions, CouchDBContextImpl context) {
 
       object keyPart;
       if (processingOptions.AssoicateCollectionsToLoad.TryGetValue(PropertyInfo.Name, out keyPart)) {
@@ -72,7 +72,7 @@ namespace CouchPotato.Odm.Internal {
       }
     }
 
-    private void CreateDirectAssociationCollection(object proxy, JToken doc, CouchDBContext context) {
+    private void CreateDirectAssociationCollection(object proxy, JToken doc, CouchDBContextImpl context) {
       JArray jArr = Serializer.GetJArray(PropertyInfo, doc);
       if (jArr != null) {
         Array clrArr = Serializer.ResolveArray(typeof(string), jArr);

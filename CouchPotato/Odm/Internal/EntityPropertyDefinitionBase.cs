@@ -19,7 +19,7 @@ namespace CouchPotato.Odm.Internal {
 
     public abstract void Read(object entity, JToken doc, string id, 
       PreProcessInfo preProcess, OdmViewProcessingOptions processingOptions, bool emptyProxy,
-      CouchDBContext context);
+      CouchDBContextImpl context);
 
     public abstract void Write(object entity, Newtonsoft.Json.Linq.JObject doc);
 

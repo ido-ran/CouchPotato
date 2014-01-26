@@ -46,19 +46,29 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Annotations\AssociationAttribute.cs" />
+    <Compile Include="Annotations\EmbeddedAttribute.cs" />
     <Compile Include="CouchClientAdapter\BulkResponse.cs" />
     <Compile Include="CouchClientAdapter\BulkResponseRow.cs" />
     <Compile Include="CouchClientAdapter\BulkUpdater.cs" />
     <Compile Include="CouchClientAdapter\ClientAdapterFactory.cs" />
     <Compile Include="FriendAssemblies.cs" />
+    <Compile Include="LoveSeatAdapter\EnumerableChunkExtensions.cs" />
     <Compile Include="LoveSeatAdapter\LoveSeatBulkUpdater.cs" />
     <Compile Include="LoveSeatAdapter\LoveSeatClientAdapter.cs" />
+    <Compile Include="Migration\ExistMigrationInfo.cs" />
+    <Compile Include="Migration\ExistMigrations.cs" />
+    <Compile Include="Migration\MigrationDefinition.cs" />
+    <Compile Include="Migration\MigrationDefinitionBase.cs" />
+    <Compile Include="Migration\MigrationDivergedException.cs" />
+    <Compile Include="Migration\RequiredMigrations.cs" />
+    <Compile Include="Migration\Migrator.cs" />
     <Compile Include="Odm\AssociationCollection.cs" />
     <Compile Include="Odm\AssociationCollectionOfT.cs" />
     <Compile Include="CouchClientAdapter\CouchDBClientAdapter.cs" />
     <Compile Include="Odm\AssociationListOfT.cs" />
     <Compile Include="Odm\AssociationSetOfT.cs" />
     <Compile Include="Odm\CouchDBContext.cs" />
+    <Compile Include="Odm\CouchDBContextImpl.cs" />
     <Compile Include="Odm\CouchDBContextExtensions.cs" />
     <Compile Include="Odm\CouchDBViewRowKey.cs" />
     <Compile Include="Odm\CouchDocInfo.cs" />
@@ -68,6 +78,7 @@
     <Compile Include="Odm\EntitiesProcessResult.cs" />
     <Compile Include="Odm\EntitiesProcessResultBuilder.cs" />
     <Compile Include="Odm\EntityInfo.cs" />
+    <Compile Include="Odm\Internal\EmbeddedPropertyDefinition.cs" />
     <Compile Include="Odm\Internal\EntityPropertiesDefinitionDocumentWritingComparer.cs" />
     <Compile Include="Odm\IdentityMap.cs" />
     <Compile Include="Odm\IdRev.cs" />
@@ -94,6 +105,7 @@
     <Compile Include="Odm\PreProcessEntityInfo.cs" />
     <Compile Include="Odm\PreProcessInfo.cs" />
     <Compile Include="Odm\ReduceView.cs" />
+    <Compile Include="Odm\SaveChangesException.cs" />
     <Compile Include="Odm\Serializer.cs" />
     <Compile Include="Odm\StringUtil.cs" />
     <Compile Include="CouchClientAdapter\CouchViewOptions.cs" />

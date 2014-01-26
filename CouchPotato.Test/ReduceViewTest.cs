@@ -46,7 +46,7 @@ count: 80
 ]
 }";
       var couchDBClientMock = new CouchDBClientAdapterMock(rawResponse);
-      CouchDBContext subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
+      CouchDBContextImpl subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
       ReduceEntity[] results = subject.ReduceView<ReduceEntity>("fake_not_used").ToArray();
       Assert.IsNotNull(results);
       Assert.AreEqual(3, results.Length);

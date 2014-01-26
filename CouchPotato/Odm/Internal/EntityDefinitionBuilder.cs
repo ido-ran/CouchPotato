@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using CouchPotato.Annotations;
 
 namespace CouchPotato.Odm.Internal {
   internal class EntityDefinitionBuilder {
@@ -32,6 +33,9 @@ namespace CouchPotato.Odm.Internal {
         else if (IsSimpleType(prop)) {
           propDef = CreateValueTypeDefinition(prop);
         }
+        else if (IsEmbedded(prop)) {
+          propDef = CreateEmbeddedDefinition(prop);
+        }
         else if (IsArray(prop)) {
           propDef = CreateArrayProperty(prop);
         }
@@ -52,6 +56,10 @@ namespace CouchPotato.Odm.Internal {
         }
       }
       return propDefs;
+    }
+
+    private EntityPropertyDefinition CreateEmbeddedDefinition(PropertyInfo prop) {
+      return new EmbeddedPropertyDefinition(prop);
     }
 
     private EntityPropertyDefinition CreateKeyPropertyDefinition(PropertyInfo prop) {
@@ -90,6 +98,10 @@ namespace CouchPotato.Odm.Internal {
               typeof(ISet<>).GUID.Equals(prop.PropertyType.GUID));
     }
 
+    private static bool IsEmbedded(PropertyInfo prop) {
+      return prop.GetCustomAttribute<EmbeddedAttribute>() != null;
+    }
+
     private static bool IsArray(PropertyInfo prop) {
       return prop.PropertyType.IsArray;
     }
@@ -126,7 +138,7 @@ namespace CouchPotato.Odm.Internal {
       if (IsKeyField(prop)) {
         fieldName = "_id";
       }
-      else if (IsSimpleType(prop) || IsCollection(prop) || IsArray(prop)) {
+      else if (IsSimpleType(prop) || IsCollection(prop) || IsArray(prop) || IsEmbedded(prop)) {
         fieldName = StringUtil.ToCamelCase(prop.Name);
       }
       else if (IsToOneReference(prop)) {

@@ -25,7 +25,7 @@ namespace CouchPotato.Odm {
 
     public AssociationSet(
       object owner, string[] keys,
-      CouchDBContext context, AssociationAttribute associationAttr)
+      CouchDBContextImpl context, AssociationAttribute associationAttr)
       : base(owner, context, associationAttr) {
 
       this.keys = new HashSet<string>(keys);
@@ -33,13 +33,13 @@ namespace CouchPotato.Odm {
 
     protected override void AddInternal(T item) {
       MaterializeModifiedCollection();
-      string id = CouchDBContext.GetEntityInstanceId(item);
+      string id = CouchDBContextImpl.GetEntityInstanceId(item);
       modifiedCollection.Add(id);
     }
 
     protected override bool RemoveInternal(T item) {
       MaterializeModifiedCollection();
-      string id = CouchDBContext.GetEntityInstanceId(item);
+      string id = CouchDBContextImpl.GetEntityInstanceId(item);
       return modifiedCollection.Remove(id);
     }
 

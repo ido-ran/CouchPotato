@@ -9,7 +9,7 @@ namespace CouchPotato.Test {
     [TestMethod]
     public void DeleteEntityMarkItForDeletion() {
       var couchDBClientMock = new CouchDBClientAdapterMock(SingleUserRawResponse);
-      CouchDBContext subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
+      CouchDBContextImpl subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
       UserModel user = subject.View<UserModel>("fake_not_used").SingleOrDefault();
       subject.Delete(user);
 
@@ -23,7 +23,7 @@ namespace CouchPotato.Test {
     public void DeleteEntityAddedToBulkUpdater() {
       var bulkUpdaterMock = new BulkUpdaterMock();
       var couchDBClientMock = new CouchDBClientAdapterMock(SingleUserRawResponse, bulkUpdaterMock);
-      CouchDBContext subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
+      CouchDBContextImpl subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
       UserModel user = subject.View<UserModel>("fake_not_used").SingleOrDefault();
       subject.Delete(user);
 

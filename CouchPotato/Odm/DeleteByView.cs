@@ -8,7 +8,7 @@ namespace CouchPotato.Odm {
   /// </summary>
   public class DeleteByView {
 
-    private readonly CouchDBContext couchDBContext;
+    private readonly CouchDBContextImpl couchDBContext;
     private readonly string viewName;
     private string key;
 
@@ -16,7 +16,7 @@ namespace CouchPotato.Odm {
     /// <summary>
     /// Only this assembly can create DeleteByView instance.
     /// </summary>
-    internal DeleteByView(CouchDBContext couchDBContext, string viewName) {
+    internal DeleteByView(CouchDBContextImpl couchDBContext, string viewName) {
       this.couchDBContext = couchDBContext;
       this.viewName = viewName;
     }

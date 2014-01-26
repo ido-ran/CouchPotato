@@ -40,7 +40,7 @@ rows: [
 ]
 }";
       var couchDBClientMock = new CouchDBClientAdapterMock(rawResponse);
-      CouchDBContext subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
+      CouchDBContextImpl subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
       UserModel user = subject.View<UserModel>("fake_not_used").SingleOrDefault();
       Assert.IsNotNull(user);
     }
@@ -75,7 +75,7 @@ rows: [
 ]
 }";
       var couchDBClientMock = new CouchDBClientAdapterMock(rawResponse);
-      CouchDBContext subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
+      CouchDBContextImpl subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
       UserModel user = subject.View<UserModel>("fake_not_used").SingleOrDefault();
 
       Assert.IsNull(user.FirstName);
@@ -90,7 +90,7 @@ offset: 40,
 rows: []
 }";
       var couchDBClientMock = new CouchDBClientAdapterMock(rawResponse);
-      CouchDBContext subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
+      CouchDBContextImpl subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
       UserModel user = subject.View<UserModel>("fake_not_used").Key("yoval.b").SingleOrDefault();
       Assert.IsNull(user);
     }
@@ -146,7 +146,7 @@ rows: [
 ]
 }";
       var couchDBClientMock = new CouchDBClientAdapterMock(rawResponse);
-      CouchDBContext subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
+      CouchDBContextImpl subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
       UserModel user = subject.View<UserModel>("fake_not_used").SingleOrDefault();
       Assert.IsNull(user);
     }
@@ -201,7 +201,7 @@ doc: {
 }";
 
       var couchDBClientMock = new CouchDBClientAdapterMock(rawResponse);
-      CouchDBContext subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
+      CouchDBContextImpl subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
       UserModel user = subject
         .View<UserModel>("fake_not_used")
         .AssociatedCollection(x => x.Tenants, 1)
@@ -304,7 +304,7 @@ $type: ""tenant""
 }";
 
       var couchDBClientMock = new CouchDBClientAdapterMock(rawResponse);
-      CouchDBContext subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
+      CouchDBContextImpl subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
       IEnumerable<UserModel> users = subject.View<UserModel>("fake_not_used");
 
       Assert.AreEqual(2, users.Count());
@@ -340,7 +340,7 @@ $type: ""tenant""
 }";
 
       var couchDBClientMock = new CouchDBClientAdapterMock(rawResponse);
-      CouchDBContext subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
+      CouchDBContextImpl subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
       TenantModel tenant = subject.View<TenantModel>("fake_not_used").SingleOrDefault();
 
       Assert.AreEqual("he-IL", tenant.DefaultLanguage);
@@ -404,7 +404,7 @@ $type: ""plan""
 }
 ");
 
-      CouchDBContext subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
+      CouchDBContextImpl subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
       UserModel user = subject.View<UserModel>("fake_not_used").SingleOrDefault();
       Assert.IsNull(user.Plan);
       subject.LoadRelated(user, cfg => cfg.One(x => x.Plan));
@@ -504,7 +504,7 @@ $type: ""plan""
 }
 ");
 
-      CouchDBContext subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
+      CouchDBContextImpl subject = ContextTestHelper.BuildContextForTest(couchDBClientMock);
       UserModel[] users = subject.View<UserModel>("fake_not_used").ToArray();
       
       subject.LoadRelated(users, cfg => cfg.One(x => x.Plan));

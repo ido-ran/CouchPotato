@@ -22,6 +22,11 @@ namespace CouchPotato.Odm {
     /// <summary>
     /// Document was deleted locally.
     /// </summary>
-    Delete
+    Delete,
+
+    /// <summary>
+    /// Document had fail to be saved.
+    /// </summary>
+    Error
   }
 }

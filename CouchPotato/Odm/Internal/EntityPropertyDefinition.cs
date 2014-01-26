@@ -19,7 +19,7 @@ namespace CouchPotato.Odm.Internal {
     /// <param name="emptyProxy"></param>
     void Read(object entity, JToken doc, string id, 
       PreProcessInfo preProcess, OdmViewProcessingOptions processingOptions, bool emptyProxy,
-      CouchDBContext context);
+      CouchDBContextImpl context);
 
     /// <summary>
     /// Write value from the entity to the document.

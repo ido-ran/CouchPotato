@@ -14,11 +14,11 @@ namespace CouchPotato.Odm {
   /// <typeparam name="T"></typeparam>
   public class ReduceView<T> : IEnumerable<T> {
 
-    private readonly CouchDBContext couchDBContext;
+    private readonly CouchDBContextImpl couchDBContext;
     private readonly string viewName;
     private CouchViewOptions options;
 
-    public ReduceView(CouchDBContext couchDBContext, string viewName) {
+    public ReduceView(CouchDBContextImpl couchDBContext, string viewName) {
       this.couchDBContext = couchDBContext;
       this.viewName = viewName;
       options = new CouchViewOptions { Group = true };

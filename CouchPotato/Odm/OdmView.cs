@@ -7,12 +7,12 @@ using Newtonsoft.Json.Linq;
 
 namespace CouchPotato.Odm {
   public class OdmView<T> : IEnumerable<T> {
-    private readonly CouchDBContext couchDBContext;
+    private readonly CouchDBContextImpl couchDBContext;
     private readonly string viewName;
     private CouchViewOptions options;
     private List<Tuple<string, object>> assoicateCollectionsToLoad;
 
-    public OdmView(CouchDBContext couchDBContext, string viewName) {
+    public OdmView(CouchDBContextImpl couchDBContext, string viewName) {
       this.couchDBContext = couchDBContext;
       this.viewName = viewName;
 

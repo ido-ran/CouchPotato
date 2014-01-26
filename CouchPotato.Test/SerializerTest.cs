@@ -54,6 +54,18 @@ namespace CouchPotato.Test {
       public int Age { get; set; }
     }
 
+    private class Address {
+      public string Street { get; set; }
+      public int Number { get; set; }
+    }
+
+    private class EntityWithEmbeddedAddress {
+      public string PeronName { get; set; }
+
+      [Embedded]
+      public Address Address { get; set; }
+    }
+
     [TestMethod]
     public void SerializeRevision() {
       var entity = new SimpleEntity
@@ -274,7 +286,7 @@ namespace CouchPotato.Test {
       Type desiredType = typeof(Nullable<DateTime>);
 
       object actual = Serializer.ResolveValue(token, desiredType);
-      
+
       Assert.IsInstanceOfType(actual, desiredType);
 
       var nullableActual = (Nullable<DateTime>)actual;
@@ -438,6 +450,47 @@ namespace CouchPotato.Test {
       JObject doc = subject.Serialize("2-update", "person-with-friends", entity);
 
       JsonAssert.FieldEquals("33", doc, "anotherEntityRefID");
+    }
+
+    [TestMethod]
+    public void EntityWithEmbedded_Serialze() {
+      var entity = new EntityWithEmbeddedAddress
+      {
+        PeronName = "Jhon",
+        Address = new Address
+        {
+          Street = "Infinate Loop St.",
+          Number = 56
+        }
+      };
+
+      Serializer subject = SerializationTestHelper.CreateSerializer(typeof(EntityWithEmbeddedAddress));
+      JObject doc = subject.Serialize("2-update", "person-with-address", entity);
+
+      Assert.AreEqual("Infinate Loop St.", doc["address"]["street"].Value<string>());
+      Assert.AreEqual("56", doc["address"]["number"].Value<string>());
+    }
+
+    [TestMethod]
+    public void EntityWithEmbedded_Deserialize() {
+      string serializedEntity =
+        @"{
+  ""$type"": ""person-with-address"",
+  ""_rev"": ""2-update"",
+  ""address"": {
+    ""street"": ""Infinate Loop St."",
+    ""number"": 56
+  },
+  ""peronName"": ""Jhon""
+}";
+
+      JObject jobj = JObject.Parse(serializedEntity);
+
+      Serializer subject = SerializationTestHelper.CreateSerializer(typeof(EntityWithEmbeddedAddress));
+      var entity = (EntityWithEmbeddedAddress)subject.CreateProxy(jobj, typeof(EntityWithEmbeddedAddress), "e1", null, null, true);
+
+      Assert.AreEqual<string>("Infinate Loop St.", entity.Address.Street);
+      Assert.AreEqual<int>(56, entity.Address.Number);
     }
 
     private static class JArrayHelper {

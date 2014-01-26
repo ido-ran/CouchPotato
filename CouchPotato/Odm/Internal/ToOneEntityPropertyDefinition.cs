@@ -16,12 +16,12 @@ namespace CouchPotato.Odm.Internal {
     private void WriteToOneReference(object entity, JObject doc) {
       object relatedEntity = PropertyInfo.GetValue(entity);
       if (!Serializer.IsNull(relatedEntity)) {
-        string relatedEntityId = CouchDBContext.GetEntityInstanceId(relatedEntity);
+        string relatedEntityId = CouchDBContextImpl.GetEntityInstanceId(relatedEntity);
         doc.Add(JsonFieldName, relatedEntityId);
       }
     }
 
-    public override void Read(object entity, JToken doc, string id, PreProcessInfo preProcess, OdmViewProcessingOptions processingOptions, bool emptyProxy, CouchDBContext context) {
+    public override void Read(object entity, JToken doc, string id, PreProcessInfo preProcess, OdmViewProcessingOptions processingOptions, bool emptyProxy, CouchDBContextImpl context) {
       
       // TODO: implement this.
     }

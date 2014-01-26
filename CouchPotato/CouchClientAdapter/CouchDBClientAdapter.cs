@@ -26,5 +26,12 @@ namespace CouchPotato.CouchClientAdapter {
     /// <param name="allOrNothing"></param>
     /// <returns></returns>
     BulkUpdater CreateBulkUpdater(bool allOrNothing);
+
+    /// <summary>
+    /// Get a single document by id.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    JObject GetDocument(string id);
   }
 }

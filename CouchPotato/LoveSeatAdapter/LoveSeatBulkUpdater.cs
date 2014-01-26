@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CouchPotato.CouchClientAdapter;
 using CouchPotato.Odm;
@@ -10,6 +11,13 @@ namespace CouchPotato.LoveSeatAdapter {
   /// BulkUpdater implementation using LoveSeat client.
   /// </summary>
   internal class LoveSeatBulkUpdater : BulkUpdater {
+
+    /// <summary>
+    /// Update at most 500 docs at a time when updating.
+    /// If more docs than that need to be updated they will be
+    /// divided into chunks and each chunk will be sent separately.
+    /// </summary>
+    private const int BulkChunkSize = 500;
 
     private readonly CouchDatabase couchDB;
     private readonly List<JObject> docsToUpdate;
@@ -34,15 +42,24 @@ namespace CouchPotato.LoveSeatAdapter {
     }
 
     public BulkResponse Execute() {
-      Documents docs = new Documents();
-      docs.Values.AddRange(docsToUpdate.Select(x => new Document(x)));
+      // This method divid the update to chunks because services such as Cloudant
+      // recommend to limit the number of bulk documents to around 500 docs.
 
-      BulkDocumentResponses bulkResponse = couchDB.SaveDocuments(docs, allOrNothing);
-      var abstractResponseRows =
-        bulkResponse.Select(x => new BulkResponseRow(x.Id, x.Rev, x.Error, x.Reason))
-        .ToArray();
+      List<BulkResponseRow> responses = new List<BulkResponseRow>(docsToUpdate.Count);
 
-      return new BulkResponse(abstractResponseRows);
+      foreach (JObject[] updateChunk in docsToUpdate.Chunks(BulkChunkSize)) {
+        Documents docs = new Documents();
+        docs.Values.AddRange(updateChunk.Select(x => new Document(x)));
+
+        BulkDocumentResponses bulkResponse = couchDB.SaveDocuments(docs, allOrNothing);
+        IEnumerable<BulkResponseRow> abstractResponseRows =
+          bulkResponse.Select(x => new BulkResponseRow(x.Id, x.Rev, x.Error, x.Reason));
+
+        responses.AddRange(abstractResponseRows);
+      }
+
+
+      return new BulkResponse(responses.ToArray());
     }
 
   }

@@ -26,5 +26,12 @@ namespace CouchPotato.CouchClientAdapter {
     public string Rev { get { return rev; } }
     public string Error { get { return error; } }
     public string Reason { get { return reason; } }
+
+    /// <summary>
+    /// Get indication if the result row has error.
+    /// </summary>
+    public bool HasError {
+      get { return !string.IsNullOrEmpty(error); }
+    }
   }
 }

@@ -15,9 +15,9 @@ namespace CouchPotato.Odm {
   /// </summary>
   internal class Serializer {
 
-    private readonly CouchDBContext context;
+    private readonly CouchDBContextImpl context;
 
-    public Serializer(CouchDBContext context) {
+    public Serializer(CouchDBContextImpl context) {
       this.context = context;
     }
 

@@ -7,8 +7,8 @@ using CouchPotato.Odm;
 
 namespace CouchPotato.Test {
   internal static class ContextTestHelper {
-    public static CouchDBContext BuildContextForTest(CouchDBClientAdapterMock couchDBClientMock) {
-      var context = new CouchDBContext(couchDBClientMock);
+    public static CouchDBContextImpl BuildContextForTest(CouchDBClientAdapterMock couchDBClientMock) {
+      var context = new CouchDBContextImpl(couchDBClientMock);
 
       context.Mapping.MapDocTypeToEntity("user", typeof(UserModel));
       context.Mapping.MapDocTypeToEntity("tenant", typeof(TenantModel));

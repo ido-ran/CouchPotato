@@ -19,7 +19,7 @@ namespace CouchPotato.Odm.Internal {
     }
 
     public override void Read(object entity, JToken doc, string id,
-      PreProcessInfo preProcess, OdmViewProcessingOptions processingOptions, bool emptyProxy, CouchDBContext context) {
+      PreProcessInfo preProcess, OdmViewProcessingOptions processingOptions, bool emptyProxy, CouchDBContextImpl context) {
 
       // Not reloading value if this is not empty proxy.
       if (emptyProxy) {
